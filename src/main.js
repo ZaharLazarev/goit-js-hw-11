@@ -10,22 +10,26 @@ const refs = {
   inp: document.querySelector(".input"),
   button: document.querySelector(".button"),
   list: document.querySelector(".gallery"),
-  loader:document.querySelector(".loader")
+  loader: document.querySelector(".loader")
 };
-refs.loader.style.display="none";
+
+refs.loader.style.display = "none";
 const myApiKey = "44825095-5da981a8d37f63705e36ec7d1";
+let gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 refs.form.addEventListener("submit", handler);
-
 function handler(event) {
   event.preventDefault();
-  if (refs.inp.value === "") {
+  let inputValue = refs.inp.value.trim().toLowerCase();
+  if (inputValue === "") {
     iziToast.error({
       title: 'Error',
       message: 'Please enter a search query!'
     });
   } else {
-    let inputValue = refs.inp.value.toLowerCase();
     showLoader();
     fetchData(myApiKey, inputValue)
       .then(data => {
@@ -47,10 +51,6 @@ function handler(event) {
           }));
           const markup = renderCard(arr);
           refs.list.innerHTML = markup;
-          let gallery = new SimpleLightbox('.gallery a', {
-            captionsData: 'alt',
-            captionDelay: 250,
-          });
           gallery.refresh();
         }
       })
